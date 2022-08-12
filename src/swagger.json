@@ -10,7 +10,7 @@
     },
     "servers": [
         {
-            "url": "https://https://back-finan.herokuapp.com/",
+            "url": "https://back-finan.herokuapp.com/",
             "description": "API de produção"
         },
         {
