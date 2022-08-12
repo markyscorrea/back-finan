@@ -22,7 +22,7 @@
 ---
 ## 🔃**ROTAS**
 
-Leia a documentação e teste o envio de requisições [AQUI.](https://api-finan.herokuapp.com/api-docs/)
+Leia a documentação e teste o envio de requisições [AQUI.](https://back-finan.herokuapp.com/api-docs/)
 
 ---
 
