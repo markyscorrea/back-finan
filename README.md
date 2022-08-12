@@ -18,7 +18,6 @@
     - Supertest
     - Swagger
 
-
 ---
 ## 🔃**ROTAS**
 
