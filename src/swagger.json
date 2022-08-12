@@ -10,11 +10,11 @@
     },
     "servers": [
         {
-            "url": "https://api-finan.herokuapp.com",
+            "url": "https://https://back-finan.herokuapp.com/",
             "description": "API de produção"
         },
         {
-            "url": "http://localhost:9000",
+            "url": "http://localhost:8080",
             "description": "API de testes"
         } 
     ],
