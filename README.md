@@ -8,6 +8,7 @@
 - Documentação API
 
 ## 💻Teconologias Utilizadas
+
 - MongoDB
 - NodeJS
     - Express
@@ -17,7 +18,6 @@
     - Jest
     - Supertest
     - Swagger
-
 ---
 ## 🔃**ROTAS**
 
