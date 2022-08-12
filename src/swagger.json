@@ -1,0 +1,923 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API de Cadastros Financeiros",
+        "description": "API em MongoDB com CRUD para coleções de usuários, pessoas, categorias e lançamentos(despesas e receitas). Criado por Márkys Corrêa.",
+        "contact": {
+            "email": "emaildomarkys@gmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "https://api-finan.herokuapp.com",
+            "description": "API de produção"
+        },
+        {
+            "url": "http://localhost:9000",
+            "description": "API de testes"
+        } 
+    ],
+    "paths": {
+        "/usuarios/cadastro": {
+            "post": {
+                "summary": "Cadastro de usuário",
+                "description": "Essa rota permite o cadastro de usuário",
+                "tags": ["Usuários"],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UsuarioCadastro"
+                            },
+                            "examples": {
+                                "usuarioCadastro": {
+                                    "value": {
+                                        "nome": "developer",
+                                        "email": "developer@gmail.com",
+                                        "senha": "123456abc"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Necessário preenchimento de todos os dados para cadastro de usuário./Já existe usuário cadastrado com esse e-mail."
+                    },
+                    "200": {
+                        "description": "Ok.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/UsuarioCadastro"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/usuarios/login": {
+            "post": {
+                "summary": "Login de usuário",
+                "description": "Essa rota permite o login de usuário",
+                "tags": ["Usuários"],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UsuarioLogin"
+                            },
+                            "examples": {
+                                "usuarioLogin": {
+                                    "value": {
+                                        "email": "developer@gmail.com",
+                                        "senha": "123456abc"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Necessário preenchimento de todos os dados para login de usuário./Não existe usuário para o email informado./Senha incorreta."
+                    },
+                    "200": {
+                        "description": "Ok.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/UsuarioLogin"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/usuarios": {
+            "get": {
+                "summary": "Busca de usuários",
+                "description": "Essa rota permite pesquisar os usuários",
+                "tags": ["Usuários"],
+                "security": [{"bearerAuth" : [] }],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Ok."
+                    }
+                }
+            }
+        },
+        "/usuarios/{id}": {
+            "get": {
+                "summary": "Busca de usuários por ID",
+                "description": "Essa rota permite pesquisar os usuários por ID",
+                "tags": ["Usuários"],
+                "security": [{"bearerAuth" : [] }],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Usuário ID",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Informe uma ID válida./Essa ID não existe no banco de dados."
+                    },
+                    "200": {
+                        "description": "Ok."
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Exclusão de usuário",
+                "description": "Essa rota permite excluir um usuário.",
+                "tags": ["Usuários"],
+                "security": [{"bearerAuth" : [] }],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Usuário ID",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Informe uma ID válida./Essa ID não existe no banco de dados."
+                    },
+                    "200": {
+                        "description": "Usuário deletado com sucesso."
+                    }
+                }
+            }
+        },
+        "/pessoas": {
+            "post": {
+                "summary": "Cadastro de pessoa",
+                "description": "Essa rota permite o cadastro de pessoa.",
+                "tags": ["Pessoas"],
+                "security": [{"bearerAuth" : [] }],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PessoaCadastro"
+                            },
+                            "examples": {
+                                "pessoaCadastro":{
+                                    "value": {
+                                        "nome": "user",
+                                        "cpf_cnpj": "00000000010",
+                                        "tipo": "f"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Necessário preenchimento de todos os campos para cadastro de pessoa./Já existe uma pessoa cadastrada para esse cpf_cnpj./Necessário preenchimento correto do tipo para cadastro de pessoa."
+                    },
+                    "200": {
+                        "description": "Ok.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/PessoaCadastro"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Busca de pessoas",
+                "description": "Essa rota permite pesquisar as pessoas",
+                "tags": ["Pessoas"],
+                "security": [{"bearerAuth" : []}],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Ok."
+                    }
+                }
+            }
+        },
+        "/pessoas/{id}": {
+            "get": {
+                "summary": "Busca de pessoas por ID",
+                "description": "Essa rota permite pesquisar as pessoas por ID",
+                "tags": ["Pessoas"],
+                "security": [{"bearerAuth" : [] }],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Pessoa ID",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Informe uma ID válida./Essa ID não existe no banco de dados."
+                    },
+                    "200": {
+                        "description": "Ok."
+                    }
+                }
+            },
+            "put": {
+                "summary": "Alteração de pessoas.",
+                "description": "Essa rota permite alterar",
+                "tags": ["Pessoas"],
+                "security": [{"bearerAuth" : [] }],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Pessoa ID",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PessoaCadastro"
+                            },
+                            "examples": {
+                                "pessoaCadastro":{
+                                    "value": {
+                                        "nome": "user 2",
+                                        "cpf_cnpj": "00000000011",
+                                        "tipo": "f"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Informe uma ID válida./Essa ID não existe no banco de dados."
+                    },
+                    "200": {
+                        "description": "Ok.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/PessoaBusca"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Exclusão de pessoa",
+                "description": "Essa rota permite excluir uma pessoa.",
+                "tags": ["Pessoas"],
+                "security": [{"bearerAuth" : [] }],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Usuário ID",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Informe uma ID válida./Essa ID não existe no banco de dados."
+                    },
+                    "200": {
+                        "description": "Pessoa deletada com sucesso."
+                    }
+                }
+            }
+        },
+        "/categorias": {
+            "post": {
+                "summary": "Cadastro de categoria",
+                "description": "Essa rota permite o cadastro de categoria.",
+                "tags": ["Categorias"],
+                "security": [{"bearerAuth" : [] }],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CategoriaCadastro"
+                            },
+                            "examples": {
+                                "pessoaCadastro":{
+                                    "value": {
+                                        "descricao": "categoria",
+                                        "tipo": "c"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Necessário preenchimento da descrição para cadastro de categoria./Necessário preenchimento correto do tipo para cadastro de categoria."
+                    },
+                    "200": {
+                        "description": "Ok.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/CategoriaCadastro"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Busca de categorias",
+                "description": "Essa rota permite pesquisar as categorias",
+                "tags": ["Categorias"],
+                "security": [{"bearerAuth" : []}],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Ok."
+                    }
+                }
+            }
+        },
+        "/categorias/{id}": {
+            "get": {
+                "summary": "Busca de categorias por ID",
+                "description": "Essa rota permite pesquisar as categorias por ID",
+                "tags": ["Categorias"],
+                "security": [{"bearerAuth" : [] }],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Categoria ID",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Informe uma ID válida./Essa ID não existe no banco de dados."
+                    },
+                    "200": {
+                        "description": "Ok."
+                    }
+                }
+            },
+            "put": {
+                "summary": "Alteração de categorias",
+                "description": "Essa rota permite alterar as categorias",
+                "tags": ["Categorias"],
+                "security": [{"bearerAuth" : [] }],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Categoria ID",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CategoriaCadastro"
+                            },
+                            "examples": {
+                                "pessoaCadastro":{
+                                    "value": {
+                                        "descricao": "categoria alterada",
+                                        "tipo": "d"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Informe uma ID válida./Essa ID não existe no banco de dados."
+                    },
+                    "200": {
+                        "description": "Ok."
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Exclusão de categorias",
+                "description": "Essa rota permite excluir as categorias",
+                "tags": ["Categorias"],
+                "security": [{"bearerAuth" : [] }],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Categoria ID",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Informe uma ID válida./Essa ID não existe no banco de dados."
+                    },
+                    "200": {
+                        "description": "Categoria deletada com sucesso."
+                    }
+                }
+            }
+        },
+        "/lancamentos": {
+            "post": {
+                "summary": "Cadastro de lançamentos (Receitas e Despesas)",
+                "description": "Essa rota permite o cadastro de receitas e despesas.",
+                "tags": ["Lançamentos"],
+                "security": [{"bearerAuth" : [] }],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "string",
+                                "warning": "Selecione o schema desejado antes de fazer a requisição."
+                                
+                            },
+                            "examples": {
+                                "receitaCadastro":{
+                                    "value": {
+                                        "descricao": "Salário",
+                                        "valor": 5000,
+                                        "tipo_conta": 1,
+                                        "tipo": "c",
+                                        "data_entrada": "10/08/2022",
+                                        "pessoa": "COLE AQUI O _ID DE PESSOA",
+                                        "categoria": {
+                                            "descricao": "Corpus",
+                                            "tipo": "c"
+                                        }
+                                    }
+                                },
+                                "despesaCadastro": {
+                                    "value": {
+                                        "descricao": "Boleto",
+                                        "valor": 950,
+                                        "tipo_conta": 2,
+                                        "tipo": "c",
+                                        "data_vencimento": "15/08/2022",
+                                        "pessoa": "COLE AQUI O _ID DE PESSOA",
+                                        "categoria": {
+                                            "descricao": "Banco",
+                                            "tipo": "c"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Necessário preenchimento de todos os campos para cadastro de lançamento./Necessário preenchimento correto de todos os campos para cadastro de lançamento."
+                    },
+                    "200": {
+                        "description": "Ok.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/LancamentoReceitaCadastro"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Busca de lançamentos",
+                "description": "Essa rota permite pesquisar os lançamentos",
+                "tags": ["Lançamentos"],
+                "security": [{"bearerAuth" : []}],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Ok."
+                    }
+                }
+            }
+            
+        },
+        "/lancamentos/{id}": {  
+            "get": {
+                "summary": "Busca de lançamentos por ID",
+                "description": "Essa rota permite pesquisar os lancamentos por ID",
+                "tags": ["Lançamentos"],
+                "security": [{"bearerAuth" : [] }],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Lançamento ID",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Informe uma ID válida./Essa ID não existe no banco de dados."
+                    },
+                    "200": {
+                        "description": "Ok."
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Exclusão de lançamentos",
+                "description": "Essa rota permite pesquisar os lancamentos",
+                "tags": ["Lançamentos"],
+                "security": [{"bearerAuth" : [] }],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Lançamento ID",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Informe uma ID válida./Essa ID não existe no banco de dados."
+                    },
+                    "200": {
+                        "description": "Lançamento deletado com sucesso."
+                    }
+                }
+            }
+        },
+        "/lancamentos/receita/{id}": {
+            "put": {
+                "summary": "Alteração de receitas",
+                "description": "Essa rota permite alterar as receitas",
+                "tags": ["Lançamentos"],
+                "security": [{"bearerAuth" : [] }],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Categoria ID",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ReceitaAlterar"
+                            },
+                            "examples": {
+                                "receita":{
+                                    "value": {
+                                        "descricao": "Paypal",
+                                        "valor": 1000,
+                                        "tipo_conta": 1,
+                                        "data_entrada": "30/07/2022",
+                                        "tipo": "C"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Necessário informar campos e valores para atualização de lançamento./Necessário preenchimento correto de todos os campos para atualização de lançamento."
+                    },
+                    "200": {
+                        "description": "Lançamento alterado com sucesso."
+                    }
+                }
+            }
+        },
+        "/lancamentos/despesa/{id}": {
+            "put": {
+                "summary": "Alteração de despesas",
+                "description": "Essa rota permite alterar as despesas",
+                "tags": ["Lançamentos"],
+                "security": [{"bearerAuth" : [] }],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Categoria ID",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DespesaAlterar"
+                            },
+                            "examples": {
+                                "despesa":{
+                                    "value": {
+                                        "descricao": "Padaria",
+                                        "valor": 100,
+                                        "tipo_conta": 2,
+                                        "data_vencimento": "30/07/2022",
+                                        "tipo": "C"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Necessário informar campos e valores para atualização de lançamento./Necessário preenchimento correto de todos os campos para atualização de lançamento."
+                    },
+                    "200": {
+                        "description": "Despesa alterado com sucesso."
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Pagamento de despesas",
+                "description": "Essa rota permite informar o pagamento de despesas",
+                "tags": ["Lançamentos"],
+                "security": [{"bearerAuth" : [] }],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Categoria ID",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DespesaPagar"
+                            },
+                            "examples": {
+                                "despesa":{
+                                    "value": {
+                                        "data_pagamento": "01/08/2022",
+                                        "status": true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "O ID informado pertence a uma receita, favor informar o ID referente a uma despesa./Necessário preenchimento dos campos para informar o pagamento."
+                    },
+                    "200": {
+                        "description": "Pagamento informado com sucesso."
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "UsuarioCadastro": {
+                "type": "object",
+                "properties": {
+                    "nome": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "senha": {
+                        "type": "string"
+                    }
+                }
+            },
+            "UsuarioLogin": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "senha": {
+                        "type": "string"
+                    }
+                }
+            },
+            "UsuarioBusca": {
+                "type": "object",
+                "properties": [{
+                    "_id": {
+                        "type": "string"
+                    },
+                    "nome": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "__v": {
+                        "type": "number"
+                    }
+                }]
+            },
+            "PessoaCadastro": {
+                "type": "object",
+                "properties": {
+                    "nome": {
+                        "type": "string"
+                    },
+                    "cpf_cnpj": {
+                        "type": "string"
+                    },
+                    "tipo": {
+                        "type": "string"
+                    }  
+                }
+            },
+            "PessoaBusca": {
+                "type": "object",
+                "properties": [{
+                    "_id": {
+                        "type": "string"
+                    },
+                    "nome": {
+                        "type": "string"
+                    },
+                    "cpf_cnpj": {
+                        "type": "string"
+                    },
+                    "tipo": {
+                        "type": "string"
+                    },
+                    "lancamentoId": [],
+                    "__v": {
+                        "type": "number"
+                    }
+                }]
+            },
+            "CategoriaCadastro": {
+                "type": "object",
+                "properties": {
+                    "descricao": {
+                        "type": "string"
+                    },
+                    "tipo": {
+                        "type": "string"
+                    }
+                }
+            },
+            "CategoriasBusca": {
+                "type": "object",
+                "properties": [{
+                    "_id": {
+                        "type": "string"
+                    },
+                    "descricao": {
+                        "type": "string"
+                    },
+                    "tipo": {
+                        "type": "string"
+                    },
+                    "lancamentoId": [],
+                    "__v": {
+                        "type": "number"
+                    }
+                }]
+            },
+            "LancamentoReceitaCadastro": {
+                "type": "object",
+                "properties": {
+                    "descricao": {
+                        "type": "string"
+                    },
+                    "valor": {
+                        "type": "number"
+                    },
+                    "tipo_conta": {
+                        "type": "number"
+                    },
+                    "tipo": {
+                        "type": "string"
+                    },
+                    "data_entrada": {
+                        "type": "string"
+                    },
+                    "pessoa": {
+                        "type": "string"
+                    },
+                    "categoria": {
+                        "type": "object",
+                        "$ref": "#/components/schemas/CategoriaCadastro"
+                    }
+                }
+            },
+            "LancamentoDespesaCadastro": {
+                "type": "object",
+                "properties": {
+                    "descricao": {
+                        "type": "string"
+                    },
+                    "valor": {
+                        "type": "number"
+                    },
+                    "tipo_conta": {
+                        "type": "number"
+                    },
+                    "tipo": {
+                        "type": "string"
+                    },
+                    "data_vencimento": {
+                        "type": "string"
+                    },
+                    "pessoa": {
+                        "type": "string"
+                    },
+                    "categoria": {
+                        "type": "object",
+                        "$ref": "#/components/schemas/CategoriaCadastro"
+                    }
+                }
+            },
+            "ReceitaAlterar": {
+                "type": "object",
+                "properties": {
+                    "descricao": {
+                        "type": "string"
+                    },
+                    "valor": {
+                        "type": "number"
+                    },
+                    "tipo_conta": {
+                        "type": "number"
+                    },
+                    "data_entrada": {
+                        "type": "string"
+                    },
+                    "tipo": {
+                        "type": "string"
+                    }
+                }
+            },
+            "DespesaAlterar": {
+                "type": "object",
+                "properties": {
+                    "descricao": {
+                        "type": "string"
+                    },
+                    "valor": {
+                        "type": "number"
+                    },
+                    "tipo_conta": {
+                        "type": "number"
+                    },
+                    "data_vencimento": {
+                        "type": "string"
+                    },
+                    "tipo": {
+                        "type": "string"
+                    }
+                }
+            },
+            "DespesaPagar": {
+                "type": "object",
+                "properties": {
+                    "data_pagamento": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "boolean"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
+}
