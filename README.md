@@ -46,7 +46,7 @@ $ npm install
 Listen in: 
 
 ```
-http://localhost:9000/
+http://localhost:8080/
 ```
 **📌OBSERVAÇÕES**
 
