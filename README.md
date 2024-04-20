@@ -75,16 +75,8 @@ $ npm test
 
 **LINKS EXTERNOS**
 
-API:
-
-- [Documentação em nuvem](https://back-finan.herokuapp.com/api-docs/)
-
 SPA:
 - [Repositório](https://github.com/markyscorrea/front-finan)
-- [Resultado em nuvem](https://front-finan.herokuapp.com/login)
-
-
-**Ambos os projetos tiveram seus resultados publicados no servidor de hospedagem gratuito HEROKU.**
 
 ---
 
